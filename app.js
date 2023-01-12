@@ -12,10 +12,10 @@ function UI() {}
 UI.prototype.addBookToList = function(book) {
     const list = document.getElementById('book-list');
 
-    //create tr element
+    //Create tr element
     const row = document.createElement('tr');
 
-    //insert cols
+    //Insert cols
     row.innerHTML = `
         <td>${book.title}</td>
         <td>${book.author}</td>
@@ -52,6 +52,16 @@ UI.prototype.showAlert = function(message, className) {
     }, 3000);
 }
 
+//Delete Book
+UI.prototype.deleteBook = function(target) {
+    if(target.className === 'delete') {
+        target.parentElement.parentElement.remove();
+        
+        //Show Alert
+        this.showAlert('Book has been removed', 'success');
+    }
+}
+
 //Clear Fields
 UI.prototype.clearFields = function() {
     document.getElementById('title').value = '';
@@ -59,34 +69,45 @@ UI.prototype.clearFields = function() {
     document.getElementById('isbn').value = '';
 }
 
-//Event Listeners
+//Event Listener for add book
 document.getElementById('book-form').addEventListener('submit', 
     function(e) {
-        //get form values
+        //Get form values
         const title = document.getElementById('title').value,
               author = document.getElementById('author').value,
               isbn = document.getElementById('isbn').value;
 
-        //creating a book
+        //Creating a book
         const book = new Book(title, author, isbn);
 
-        //create ui
+        //Create ui
         const ui = new UI();
 
         //Validate
         if(title === '' || author === '' || isbn === '') {
-            //error alert
+            //Error alert
             ui.showAlert('Please fill in all fields', 'error');
         } else {
             //Add book to list
             ui.addBookToList(book);
 
-            //Show alert
+            //Show alert  
             ui.showAlert('Book Added', 'success');
 
-            //clear fields
+            //Clear fields
             ui.clearFields();
         }
 
         e.preventDefault();
 });
+
+//Event listener for delete
+document.getElementById('book-list').addEventListener('click', 
+    function(e) {
+        const ui = new UI();
+
+        ui.deleteBook(e.target);
+
+
+        e.preventDefault();
+})
